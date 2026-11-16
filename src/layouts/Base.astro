@@ -1,0 +1,42 @@
+---
+import "../styles/fonts.css";
+import "../styles/tokens.css";
+import "../styles/global.css";
+import "../styles/site.css";
+import displayFont from "../assets/fonts/sofia-sans-condensed-cyrillic-wght-normal.woff2?url";
+
+interface Props { lang: string; title: string; description: string; canonical?: string; metaRec?: string; }
+const { lang, title, description, canonical, metaRec } = Astro.props;
+---
+<!doctype html>
+<html lang={lang}>
+  <head>
+    <meta charset="utf-8" />
+    <script is:inline>document.documentElement.classList.add("js")</script>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title data-rec={metaRec}>{title}</title>
+    <meta name="description" content={description} data-rec={metaRec} />
+    {canonical && <link rel="canonical" href={canonical} />}
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:locale" content="uk_UA" />
+    <meta name="theme-color" content="#F6F7F4" />
+    <link rel="icon" type="image/png" href={`${import.meta.env.BASE_URL.replace(/\/?$/, "/")}favicon.png`} />
+    <meta name="robots" content="noindex" />
+    <link rel="preload" href={displayFont} as="font" type="font/woff2" crossorigin />
+    <slot name="head" />
+  </head>
+  <body>
+    <a class="skip-link" href="#main">{lang.startsWith("uk") ? "До змісту" : lang.startsWith("ru") ? "К содержанию" : "Skip to content"}</a>
+    <slot name="header" />
+    <main id="main"><slot /></main>
+    <slot name="footer" />
+    <script src="../scripts/reveal.ts"></script>
+    <slot name="scripts" />
+  </body>
+</html>
+
+<style is:global>
+  /* page shell: no horizontal scroll, sticky-safe (also in global.css) */
+  html, body { overflow-x: clip; }
+</style>

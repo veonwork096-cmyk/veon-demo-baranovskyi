@@ -1,0 +1,65 @@
+---
+import Icon from "./Icon.astro";
+import { contacts, nav } from "../data/clinic";
+import { img } from "../lib/url";
+---
+<header class="header" data-header>
+  <div class="container header__inner">
+    <a class="header__logo" href="#top" aria-label="Baranovskyi Dental Clinic — на початок сторінки">
+      <img src={img("logo-dark-480.webp")} width="480" height="264" alt="Baranovskyi Dental Clinic" />
+    </a>
+
+    <nav class="header__nav" id="site-nav" aria-label="Розділи сторінки" data-nav>
+      <ul class="header__links">
+        {nav.map((item) => <li><a class="header__link" href={item.href}>{item.label}</a></li>)}
+      </ul>
+      <div class="header__menu-extra">
+        <a class="menu-phone" href={contacts.phoneHref}><Icon name="phone" size={22} />{contacts.phoneDisplay}</a>
+        <a class="btn btn--brand" href={contacts.booking} target="_blank" rel="noopener" data-rec="R-103">Записатися онлайн</a>
+        <div class="menu-msg">
+          <a class="chip" href={contacts.viber}><Icon name="viber" />Viber</a>
+          <a class="chip" href={contacts.telegram} target="_blank" rel="noopener"><Icon name="telegram" />Telegram</a>
+        </div>
+      </div>
+    </nav>
+
+    <div class="header__actions">
+      <a class="header__phone" href={contacts.phoneHref}><Icon name="phone" size={18} />{contacts.phoneDisplay}</a>
+      <a class="btn btn--brand btn--sm" href={contacts.booking} target="_blank" rel="noopener" data-rec="R-103">Записатися онлайн</a>
+      <button class="header__toggle" type="button" aria-expanded="false" aria-controls="site-nav" data-nav-toggle>
+        <Icon name="menu" size={22} class="i-open" /><Icon name="close" size={22} class="i-close" />
+        <span data-nav-label>Меню</span>
+      </button>
+    </div>
+  </div>
+</header>
+
+<script>
+  const header = document.querySelector<HTMLElement>("[data-header]");
+  const toggle = document.querySelector<HTMLButtonElement>("[data-nav-toggle]");
+  const navEl = document.querySelector<HTMLElement>("[data-nav]");
+  const label = document.querySelector<HTMLElement>("[data-nav-label]");
+
+  if (header) {
+    const onScroll = () => header.classList.toggle("is-scrolled", window.scrollY > 80);
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+  }
+
+  if (toggle && navEl && label) {
+    const setOpen = (open: boolean) => {
+      toggle.setAttribute("aria-expanded", String(open));
+      label.textContent = open ? "Закрити" : "Меню";
+      document.documentElement.classList.toggle("nav-open", open);
+    };
+    toggle.addEventListener("click", () => setOpen(toggle.getAttribute("aria-expanded") !== "true"));
+    navEl.querySelectorAll("a").forEach((a) => a.addEventListener("click", () => setOpen(false)));
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape" && toggle.getAttribute("aria-expanded") === "true") {
+        setOpen(false);
+        toggle.focus();
+      }
+    });
+    window.matchMedia("(min-width: 1100px)").addEventListener("change", (e) => { if (e.matches) setOpen(false); });
+  }
+</script>

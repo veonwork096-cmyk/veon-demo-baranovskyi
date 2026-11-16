@@ -1,0 +1,155 @@
+---
+import FutureLink from "./FutureLink.astro";
+import Photo from "./Photo.astro";
+import Icon from "./Icon.astro";
+import { contacts, directions, FUTURE_NOTE } from "../data/clinic";
+---
+<section id="poslugy" class="section" data-rec="R-107,R-102" aria-labelledby="poslugy-title">
+  <div class="container">
+    <div class="section__head">
+      <h2 id="poslugy-title">Що лікуємо і скільки це коштує</h2>
+      <p class="section__note">Ціни з опублікованого прайсу клініки, у гривнях.</p>
+    </div>
+
+    <div class="switch" data-switch>
+      <div class="switch__list" role="tablist" aria-label="Напрями лікування" aria-orientation="vertical">
+        {directions.map((d, i) => (
+          <button class="switch__tab" type="button" role="tab" id={`tab-${d.id}`} aria-controls={`panel-${d.id}`} aria-selected={i === 0 ? "true" : "false"} tabindex={i === 0 ? 0 : -1}>
+            {d.title}
+          </button>
+        ))}
+        <span class="switch__marker" aria-hidden="true"></span>
+      </div>
+
+      <div class="switch__panels">
+        {directions.map((d) => (
+          <article class="panel" id={`panel-${d.id}`} aria-labelledby={`title-${d.id}`}>
+            <h3 class="panel__title" id={`title-${d.id}`} data-title={d.title}>{d.title}</h3>
+            <div class="panel__body" id={`body-${d.id}`}>
+              <p class="panel__short">{d.short}</p>
+              <dl class="prices">
+                {d.rows.map((r) => (
+                  <div class="prices__row"><dt>{r.name}</dt><dd class="price">{r.price}</dd></div>
+                ))}
+              </dl>
+              <div class="panel__media">
+                {d.photo ? (
+                  <Photo class="panel__photo" name={d.photo.name} widths={d.photo.widths} w={d.photo.w} h={d.photo.h} alt={d.photo.alt} sizes="(min-width: 1024px) 240px, 90vw" caption={d.photo.caption} />
+                ) : d.figure ? (
+                  <p class="panel__figure"><span class="panel__figure-value">{d.figure.value}</span><span class="panel__figure-caption">{d.figure.caption}</span></p>
+                ) : null}
+              </div>
+              <div class="panel__actions">
+                <a class="btn btn--brand" href={contacts.booking} target="_blank" rel="noopener" data-rec="R-103"><Icon name="calendar" />Записатися онлайн</a>
+                <FutureLink note={FUTURE_NOTE}>Читати про напрям</FutureLink>
+              </div>
+            </div>
+          </article>
+        ))}
+      </div>
+    </div>
+
+    <div class="section__foot">
+      <FutureLink note={FUTURE_NOTE}>Повний прайс — понад 80 позицій</FutureLink>
+    </div>
+  </div>
+</section>
+
+<script>
+  // Switcher: tabs on desktop (≥1024 px), accordion on smaller screens. Without JS every panel is visible.
+  const root = document.querySelector<HTMLElement>("[data-switch]");
+  if (root) {
+    const tabs = Array.from(root.querySelectorAll<HTMLButtonElement>("[role=tab]"));
+    const panels = Array.from(root.querySelectorAll<HTMLElement>(".panel"));
+    const marker = root.querySelector<HTMLElement>(".switch__marker");
+    const mq = window.matchMedia("(min-width: 1024px)");
+    let active = 0;
+
+    // accordion toggles live inside the panel headings
+    const toggles = panels.map((panel) => {
+      const h = panel.querySelector<HTMLElement>(".panel__title")!;
+      const body = panel.querySelector<HTMLElement>(".panel__body")!;
+      const btn = document.createElement("button");
+      btn.type = "button";
+      btn.className = "panel__toggle";
+      btn.setAttribute("aria-controls", body.id);
+      btn.innerHTML = `<span>${h.dataset.title ?? h.textContent ?? ""}</span><svg class="icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>`;
+      return { panel, h, body, btn, label: h.textContent ?? "" };
+    });
+
+    const moveMarker = () => {
+      if (!marker) return;
+      const t = tabs[active];
+      marker.style.setProperty("--marker-y", `${t.offsetTop}px`);
+      marker.style.setProperty("--marker-h", `${t.offsetHeight}px`);
+    };
+
+    const select = (i: number, focus = false) => {
+      active = i;
+      tabs.forEach((t, k) => {
+        const on = k === i;
+        t.setAttribute("aria-selected", String(on));
+        t.tabIndex = on ? 0 : -1;
+        panels[k].hidden = !on;
+        panels[k].classList.toggle("is-entering", on);
+      });
+      if (focus) tabs[i].focus();
+      moveMarker();
+    };
+
+    const setMode = () => {
+      if (mq.matches) {
+        root.classList.add("is-tabs");
+        root.classList.remove("is-acc");
+        toggles.forEach(({ h, body, btn, label, panel }) => {
+          if (btn.isConnected) { h.textContent = label; }
+          body.hidden = false;
+          panel.setAttribute("role", "tabpanel");
+          panel.setAttribute("aria-labelledby", tabs[toggles.findIndex((x) => x.panel === panel)].id);
+          panel.tabIndex = 0;
+        });
+        select(active);
+      } else {
+        root.classList.add("is-acc");
+        root.classList.remove("is-tabs");
+        toggles.forEach(({ h, body, btn, panel }, k) => {
+          panel.hidden = false;
+          panel.removeAttribute("role");
+          panel.removeAttribute("tabindex");
+          panel.setAttribute("aria-labelledby", h.id);
+          if (!btn.isConnected) { h.textContent = ""; h.append(btn); }
+          const open = k === active;
+          btn.setAttribute("aria-expanded", String(open));
+          body.hidden = !open;
+        });
+      }
+    };
+
+    tabs.forEach((t, i) => {
+      t.addEventListener("click", () => select(i));
+      t.addEventListener("keydown", (e) => {
+        const last = tabs.length - 1;
+        let n = -1;
+        if (e.key === "ArrowDown" || e.key === "ArrowRight") n = i === last ? 0 : i + 1;
+        if (e.key === "ArrowUp" || e.key === "ArrowLeft") n = i === 0 ? last : i - 1;
+        if (e.key === "Home") n = 0;
+        if (e.key === "End") n = last;
+        if (n >= 0) { e.preventDefault(); select(n, true); }
+      });
+    });
+
+    toggles.forEach(({ btn, body }, k) => {
+      btn.addEventListener("click", () => {
+        const open = btn.getAttribute("aria-expanded") !== "true";
+        btn.setAttribute("aria-expanded", String(open));
+        body.hidden = !open;
+        if (open) active = k;
+      });
+    });
+
+    setMode();
+    mq.addEventListener("change", setMode);
+    window.addEventListener("resize", moveMarker, { passive: true });
+    document.fonts?.ready.then(moveMarker);
+  }
+</script>

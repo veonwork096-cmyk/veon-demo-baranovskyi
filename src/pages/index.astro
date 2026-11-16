@@ -1,0 +1,50 @@
+---
+import Base from "../layouts/Base.astro";
+import Header from "../components/Header.astro";
+import Hero from "../components/Hero.astro";
+import Services from "../components/Services.astro";
+import Works from "../components/Works.astro";
+import FirstVisit from "../components/FirstVisit.astro";
+import Doctors from "../components/Doctors.astro";
+import Sterilization from "../components/Sterilization.astro";
+import Contacts from "../components/Contacts.astro";
+import Footer from "../components/Footer.astro";
+import BottomBar from "../components/BottomBar.astro";
+import { contacts } from "../data/clinic";
+
+const title = "Стоматологія в Ужгороді під мікроскопом | Baranovskyi Dental";
+const description = "Лікування каналів під мікроскопом, вініри, імплантація, брекети й елайнери на вул. Ф. Тихого, 9 в Ужгороді. Консультація з планом — 800 грн.";
+
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@type": "Dentist",
+  name: contacts.name,
+  telephone: "+380991241102",
+  address: {
+    "@type": "PostalAddress",
+    streetAddress: "вул. Ф. Тихого, 9",
+    addressLocality: "Ужгород",
+    addressRegion: "Закарпатська область",
+    addressCountry: "UA",
+  },
+  hasMap: contacts.map,
+  sameAs: [contacts.instagram, contacts.facebook, contacts.telegram],
+  potentialAction: {
+    "@type": "ReserveAction",
+    target: { "@type": "EntryPoint", urlTemplate: contacts.booking },
+    name: "Записатися онлайн",
+  },
+};
+---
+<Base lang="uk" title={title} description={description} metaRec="R-002">
+  <script slot="head" type="application/ld+json" data-rec="R-003" set:html={JSON.stringify(jsonLd)} />
+  <Header slot="header" />
+  <Hero />
+  <Services />
+  <Works />
+  <FirstVisit />
+  <Doctors />
+  <Sterilization />
+  <Contacts />
+  <Fragment slot="footer"><Footer /><BottomBar /></Fragment>
+</Base>

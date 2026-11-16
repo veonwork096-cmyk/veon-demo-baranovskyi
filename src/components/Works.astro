@@ -1,0 +1,45 @@
+---
+import FutureLink from "./FutureLink.astro";
+import { FUTURE_NOTE } from "../data/clinic";
+import { img } from "../lib/url";
+
+// Portfolio images of the clinic (2480×1860 originals): «до» on top, «після» below, as the clinic shoots them.
+const works = [
+  { name: "work-aesthetic-3", section: "Естетична стоматологія", alt: "Передні зуби до лікування: сколи, потемніння й нерівний край; після: рівні світлі зуби однакової форми" },
+  { name: "work-aesthetic-5", section: "Естетична стоматологія", alt: "Знімок до і після естетичного лікування передніх зубів" },
+  { name: "work-ortho-2", section: "Ортодонтія", alt: "Зуби до ортодонтичного лікування — скупчені й нерівні; після — вирівняний зубний ряд" },
+  { name: "work-aesthetic-8", section: "Естетична стоматологія", alt: "Знімок до і після естетичного лікування: зверху вихідний стан, знизу результат" },
+];
+const sizes = ["(min-width: 768px) 56vw, 92vw", "(min-width: 768px) 40vw, 92vw", "(min-width: 768px) 40vw, 92vw", "(min-width: 768px) 56vw, 92vw"];
+---
+<section id="roboty" class="section band--dark" data-rec="R-108,S-R009" aria-labelledby="roboty-title">
+  <div class="container">
+    <div class="section__head">
+      <h2 id="roboty-title">Знято до і після лікування</h2>
+      <p class="section__note">Знімки з портфоліо клініки: зверху — до лікування, знизу — після.</p>
+    </div>
+
+    <div class="works">
+      {works.map((w, i) => (
+        <figure class="work" data-reveal data-rec="R-206,R-011">
+          <div class="work__media">
+            <div class="work__marks" aria-hidden="true"><span>до</span><span>після</span></div>
+            <div class="work__img">
+              <img
+                src={img(`${w.name}-1600.webp`)}
+                srcset={[480, 960, 1600].map((x) => `${img(`${w.name}-${x}.webp`)} ${x}w`).join(", ")}
+                sizes={sizes[i]}
+                width="1600" height="1200" alt={w.alt} loading="lazy" decoding="async"
+              />
+            </div>
+          </div>
+          <figcaption class="work__caption">{w.section}</figcaption>
+        </figure>
+      ))}
+    </div>
+
+    <div class="section__foot">
+      <FutureLink note={FUTURE_NOTE}>Усі роботи клініки</FutureLink>
+    </div>
+  </div>
+</section>

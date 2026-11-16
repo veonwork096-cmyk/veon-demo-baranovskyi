@@ -1,0 +1,30 @@
+---
+import FutureLink from "./FutureLink.astro";
+import { FUTURE_NOTE, sterilization } from "../data/clinic";
+import { img } from "../lib/url";
+---
+<section id="sterylizatsiya" class="section" aria-labelledby="steryl-title">
+  <div class="container">
+    <div class="section__head">
+      <h2 id="steryl-title">Стерилізація у п'ять етапів</h2>
+      <p class="section__note">Стерилізаційний блок клініки відкритий для огляду пацієнтом.</p>
+    </div>
+
+    <ol class="film" tabindex="0" aria-label="П'ять етапів стерилізації, кадри по порядку">
+      {sterilization.map((s, i) => (
+        <li class="film__item" data-reveal style={`--reveal-delay:${i * 80}ms`}>
+          <figure class="frame">
+            <div class="frame__media">
+              <img src={img(`${s.name}-366.webp`)} width="366" height="366" alt={`Етап ${s.n} стерилізації. ${s.text}`} loading="lazy" decoding="async" />
+            </div>
+            <figcaption class="frame__caption"><h3 class="film__title"><span class="film__n"><span class="visually-hidden">Етап </span>{s.n}</span> {s.text}</h3></figcaption>
+          </figure>
+        </li>
+      ))}
+    </ol>
+
+    <div class="section__foot">
+      <FutureLink note={FUTURE_NOTE}>Про клініку і стерилізацію</FutureLink>
+    </div>
+  </div>
+</section>

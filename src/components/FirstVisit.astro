@@ -1,0 +1,36 @@
+---
+import Photo from "./Photo.astro";
+import Icon from "./Icon.astro";
+import { contacts, firstVisit } from "../data/clinic";
+---
+<section id="pershyi-vizyt" class="section band--brand" data-rec="R-103" aria-labelledby="vizyt-title">
+  <div class="container visit">
+    <Photo
+      class="visit__photo"
+      name="first-visit-photo"
+      widths={[480, 693]}
+      w={693}
+      h={462}
+      alt="Лікар фотографує зуби пацієнтки в кріслі, поруч асистентка"
+      sizes="(min-width: 1024px) 38vw, 92vw"
+      caption="Фотопротокол на першій консультації"
+    />
+    <div class="visit__body">
+      <h2 id="vizyt-title">Перший візит коштує 800 гривень</h2>
+      <p class="visit__lead">На кожній першій консультації клініка робить фотодокументацію.</p>
+      <ol class="scale">
+        {firstVisit.map((s) => (
+          <li class="scale__step">
+            <span class="scale__price">{s.price}</span>
+            <h3 class="scale__title">{s.title}</h3>
+            <p class="scale__text">{s.text}</p>
+          </li>
+        ))}
+      </ol>
+      <div class="visit__actions">
+        <a class="btn" href={contacts.booking} target="_blank" rel="noopener"><Icon name="calendar" />Записатися онлайн</a>
+        <a class="btn btn--line" href={contacts.phoneHref}><Icon name="phone" />Подзвонити</a>
+      </div>
+    </div>
+  </div>
+</section>

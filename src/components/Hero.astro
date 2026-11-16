@@ -1,0 +1,43 @@
+---
+import Icon from "./Icon.astro";
+import Photo from "./Photo.astro";
+import { contacts } from "../data/clinic";
+---
+<section id="top" class="hero" data-rec="R-101,R-111,R-202,G-R005,MA-R004">
+  <div class="container hero__head">
+    <h1 class="hero__title" data-rec="R-001,R-102"><span class="hero__line">Стоматологія під мікроскопом</span> <span class="hero__line">у&nbsp;центрі Ужгорода</span></h1>
+    <p class="hero__lead">Фотопротокол на першій консультації, план і ціна — до початку лікування.</p>
+  </div>
+
+  <div class="container hero__band">
+    <div class="plate" data-plate data-rec="R-101,R-103">
+      <div class="plate__actions">
+        <a class="btn plate__call" href={contacts.phoneHref}><Icon name="phone" />Подзвонити <span class="plate__num">{contacts.phoneDisplay}</span></a>
+        <a class="btn plate__book" href={contacts.booking} target="_blank" rel="noopener"><Icon name="calendar" />Записатися онлайн</a>
+      </div>
+      <ul class="plate__msg" aria-label="Месенджери">
+        <li><a class="plate__link" href={contacts.viber}><Icon name="viber" />Viber</a></li>
+        <li><a class="plate__link" href={contacts.telegram} target="_blank" rel="noopener"><Icon name="telegram" />Telegram</a></li>
+      </ul>
+      <p class="plate__offer">Перша консультація з&nbsp;планом лікування — <strong class="plate__price">800&nbsp;грн</strong></p>
+      <p class="plate__addr">
+        <Icon name="pin" size={18} /><span>{contacts.street}</span>
+        <a class="plate__link plate__route" href={contacts.map} target="_blank" rel="noopener">Прокласти маршрут</a>
+      </p>
+    </div>
+
+    <Photo
+      class="hero__photo"
+      imgClass="hero__img"
+      name="hero-microscope"
+      widths={[480, 960, 1600]}
+      w={1600}
+      h={1002}
+      sizes="(min-width: 1024px) 75vw, 100vw"
+      alt="Лікар-стоматолог лікує пацієнта під дентальним мікроскопом, поруч асистентка — кабінет клініки"
+      caption="Лікування каналів під мікроскопом — від 3 200 грн."
+      eager
+      rec="R-201,R-206"
+    />
+  </div>
+</section>

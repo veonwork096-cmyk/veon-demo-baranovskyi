@@ -1,0 +1,46 @@
+---
+import FutureLink from "./FutureLink.astro";
+import Icon from "./Icon.astro";
+import { contacts, FUTURE_NOTE } from "../data/clinic";
+import { img } from "../lib/url";
+
+const pages = ["Естетична стоматологія", "Вініри", "Відбілювання", "Лікування під мікроскопом", "Ортодонтія", "Хірургія", "Імплантація", "Пародонтологія", "Повний прайс", "Роботи", "Команда", "Про клініку"];
+---
+<footer class="footer" data-rec="R-106">
+  <div class="container">
+    <div class="footer__grid">
+      <div>
+        <a class="footer__logo" href="#top" aria-label="Baranovskyi Dental Clinic — на початок сторінки">
+          <img src={img("logo-white-480.webp")} width="480" height="264" alt="Baranovskyi Dental Clinic" loading="lazy" decoding="async" />
+        </a>
+      </div>
+      <div>
+        <p class="footer__title">Адреса і телефон</p>
+        <ul class="footer__list">
+          <li><a href={contacts.map} target="_blank" rel="noopener"><Icon name="pin" size={18} />м. Ужгород, {contacts.street}</a></li>
+          <li><a href={contacts.phoneHref}><Icon name="phone" size={18} />{contacts.phoneDisplay}</a></li>
+          <li><a href={contacts.booking} target="_blank" rel="noopener"><Icon name="calendar" size={18} />Записатися онлайн</a></li>
+        </ul>
+      </div>
+      <div>
+        <p class="footer__title">Месенджери і соцмережі</p>
+        <ul class="footer__list">
+          <li><a href={contacts.viber}><Icon name="viber" size={18} />Viber</a></li>
+          <li><a href={contacts.telegram} target="_blank" rel="noopener"><Icon name="telegram" size={18} />Telegram</a></li>
+          <li><a href={contacts.instagram} target="_blank" rel="noopener"><Icon name="instagram" size={18} />Instagram</a></li>
+          <li><a href={contacts.facebook} target="_blank" rel="noopener"><Icon name="facebook" size={18} />Facebook</a></li>
+        </ul>
+      </div>
+      <div>
+        <p class="footer__title">Сторінки</p>
+        <ul class="footer__pages">
+          {pages.map((p) => <li><FutureLink note={FUTURE_NOTE}>{p}</FutureLink></li>)}
+        </ul>
+      </div>
+    </div>
+    <div class="footer__bottom">
+      <p>© 2026 Baranovskyi Dental Clinic, Ужгород</p>
+      <FutureLink note={FUTURE_NOTE}>Політика конфіденційності</FutureLink>
+    </div>
+  </div>
+</footer>

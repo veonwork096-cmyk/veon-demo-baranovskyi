@@ -1,0 +1,40 @@
+---
+// «Кадр протоколу»: a real clinic photo (WebP + srcset, width/height) with an optional fact caption.
+import { img } from "../lib/url";
+
+interface Props {
+  name: string;          // file stem in public/images: <name>-<width>.webp
+  widths: number[];      // available widths, ascending
+  w: number;             // intrinsic width of the largest file
+  h: number;             // intrinsic height of the largest file
+  alt: string;
+  sizes: string;
+  caption?: string;
+  eager?: boolean;       // LCP image: eager + fetchpriority high
+  class?: string;
+  imgClass?: string;
+  rec?: string;
+  reveal?: boolean;
+}
+const { name, widths, w, h, alt, sizes, caption, eager = false, class: cls, imgClass, rec, reveal = false } = Astro.props;
+const srcset = widths.map((x) => `${img(`${name}-${x}.webp`)} ${x}w`).join(", ");
+const src = img(`${name}-${widths[widths.length - 1]}.webp`);
+---
+<figure class:list={["frame", cls]} data-rec={rec} data-reveal={reveal ? "" : undefined}>
+  <div class="frame__media">
+    <img
+      class={imgClass}
+      src={src}
+      srcset={srcset}
+      sizes={sizes}
+      width={w}
+      height={h}
+      alt={alt}
+      loading={eager ? "eager" : "lazy"}
+      decoding={eager ? "sync" : "async"}
+      fetchpriority={eager ? "high" : undefined}
+    />
+    <slot name="overlay" />
+  </div>
+  {caption && <figcaption class="frame__caption"><slot name="caption-lead" />{caption}</figcaption>}
+</figure>

@@ -1,0 +1,25 @@
+---
+// Mobile bottom bar (< 768 px): replaces the three floating buttons of the current site (R-111).
+import Icon from "./Icon.astro";
+import { contacts } from "../data/clinic";
+---
+<nav class="bar" aria-label="Швидкий зв'язок" data-bar data-rec="R-111,R-103">
+  <a class="bar__call" href={contacts.phoneHref}><Icon name="phone" />Подзвонити</a>
+  <a href={contacts.booking} target="_blank" rel="noopener"><Icon name="calendar" />Онлайн</a>
+  <a href={contacts.viber}><Icon name="viber" />Viber</a>
+  <a href={contacts.telegram} target="_blank" rel="noopener"><Icon name="telegram" />Telegram</a>
+</nav>
+
+<script>
+  // Show the bar once the hero action plate has left the screen (it is visible without JS).
+  const bar = document.querySelector<HTMLElement>("[data-bar]");
+  const plate = document.querySelector<HTMLElement>("[data-plate]");
+  if (bar && plate && "IntersectionObserver" in window) {
+    bar.classList.add("is-hidden");
+    new IntersectionObserver(([e]) => {
+      const gone = !e.isIntersecting && e.boundingClientRect.top < 0;
+      bar.classList.toggle("is-hidden", !gone);
+      bar.toggleAttribute("inert", !gone);
+    }).observe(plate);
+  }
+</script>

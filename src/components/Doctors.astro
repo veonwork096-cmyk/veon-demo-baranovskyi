@@ -1,0 +1,83 @@
+---
+import FutureLink from "./FutureLink.astro";
+import Photo from "./Photo.astro";
+import { FUTURE_NOTE } from "../data/clinic";
+import { img } from "../lib/url";
+
+// C-001…C-004; prices of each doctor's directions from the clinic's price list. No experience or certificates (not published).
+const doctors = [
+  {
+    name: "Яцканич Віталій Іванович",
+    file: "doctor-yatskanych",
+    role: "Лікар-ортодонт",
+    dirs: "Ортодонтія: брекети, елайнери",
+    prices: [
+      { name: "Брекети EMPOWER, одна щелепа", price: "24 750 грн" },
+      { name: "Елайнери Reev's", price: "105 000 грн" },
+    ],
+  },
+  {
+    name: "Магдич Ольга Миколаївна",
+    file: "doctor-magdych",
+    role: "Лікар",
+    dirs: "Пародонтологія, естетична стоматологія",
+    prices: [
+      { name: "Професійне чищення", price: "2 600–3 600 грн" },
+      { name: "Композитний вінір", price: "5 900 грн" },
+    ],
+  },
+];
+---
+<section id="likari" class="section" data-rec="R-109,R-102" aria-labelledby="likari-title">
+  <div class="container">
+    <div class="section__head">
+      <h2 id="likari-title">Лікар-засновник і його команда</h2>
+    </div>
+
+    <div class="team">
+      <article class="founder">
+        <Photo
+          class="founder__photo"
+          name="doctor-baranovskyi"
+          widths={[480, 710]}
+          w={710}
+          h={710}
+          alt="Сергій Барановський у чорному поло клініки на тлі рецепції з логотипом"
+          sizes="(min-width: 1024px) 52vw, 92vw"
+        />
+        <div class="founder__info">
+          <h3>Барановський Сергій Михайлович</h3>
+          <p class="person__role">Головний лікар і засновник клініки</p>
+          <p class="person__dirs">Ендодонтія, ортопедія, хірургія</p>
+          <dl class="prices">
+            <div class="prices__row"><dt>Лікування каналу під мікроскопом, одноканальний зуб</dt><dd class="price">3 200 грн</dd></div>
+            <div class="prices__row"><dt>Цирконієва коронка</dt><dd class="price">10 400 грн</dd></div>
+            <div class="prices__row"><dt>Імплантація, базове рішення</dt><dd class="price">18 200 грн</dd></div>
+          </dl>
+        </div>
+      </article>
+
+      <div class="side">
+        <div class="doctors">
+          {doctors.map((d) => (
+            <article class="doctor">
+              <Photo name={d.file} widths={[270, 540]} w={540} h={720} alt={`${d.name}, ${d.role.toLowerCase()} клініки`} sizes="(min-width: 1024px) 17vw, (min-width: 600px) 45vw, 92vw" />
+              <h3>{d.name}</h3>
+              <p class="person__dirs">{d.dirs}</p>
+              <dl class="prices">
+                {d.prices.map((p) => <div class="prices__row"><dt>{p.name}</dt><dd class="price">{p.price}</dd></div>)}
+              </dl>
+            </article>
+          ))}
+        </div>
+
+        <div class="admin">
+          <img src={img("admin-baranovska-160.webp")} width="160" height="213" alt="Ольга Барановська, адміністратор клініки" loading="lazy" decoding="async" />
+          <p><span class="admin__name">Барановська Ольга Іванівна</span><br /><span class="person__role">Адміністратор клініки</span></p>
+        </div>
+
+        <FutureLink note={FUTURE_NOTE}>Уся команда клініки</FutureLink>
+      </div>
+    </div>
+  </div>
+</section>
